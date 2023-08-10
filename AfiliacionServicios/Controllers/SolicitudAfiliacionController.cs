@@ -94,9 +94,6 @@ namespace AfiliacionServicios.Controllers
             return View(solicitudAfiliacion);
         }
 
-        // POST: SolicitudAfiliacion/Aprobacion
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Aprobacion(int? id, [Bind("id,NumeroIdentidad,Nombres,Apellidos,FechaNacimiento,Sexo,Aprobado,Activado,Anulado,FechaCreacion,Servicio")] SolicitudAfiliacion solicitudAfiliacion)
@@ -137,14 +134,21 @@ namespace AfiliacionServicios.Controllers
         }
 
         // POST: SolicitudAfiliacion/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("id,NumeroIdentidad,Nombres,Apellidos,Servicio,FechaNacimiento,Sexo")] SolicitudAfiliacion solicitudAfiliacion)
         {
             try {
                 
+
+                var solicitudAfiliacionNoAprobada = await _context.SolicitudAfiliacion
+                    .FirstOrDefaultAsync(m => m.NumeroIdentidad == solicitudAfiliacion.NumeroIdentidad && m.Aprobado == false);
+
+                if(solicitudAfiliacionNoAprobada != null) {
+                    ViewBag.Message = $"Ya existen solicitudes sin aprobar para el afiliado, favor revisar que esten aprobada las afiliaciones del clientes antes de crear otra";
+                    return View();
+                }                
+
                 solicitudAfiliacion.FechaCreacion = DateTime.Now;
                 _context.Add(solicitudAfiliacion);
                 await _context.SaveChangesAsync();

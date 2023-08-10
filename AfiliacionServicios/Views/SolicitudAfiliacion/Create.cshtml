@@ -6,10 +6,17 @@
 
 }
 
-<h1>Creación</h1>
+@if(ViewBag.Message != null) {
+    <script type="text/javascript">
+        window.onload = function() {
+            alert("@ViewBag.Message");
+        }
+    </script>
+}
 
-<h4>Solicitud de Afiliacion</h4>
+<h4>Creación de solicitud de afiliación</h4>
 <hr />
+
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Create">
