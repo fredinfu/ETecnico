@@ -1,0 +1,96 @@
+@model AfiliacionServicios.Models.SolicitudAfiliacion
+
+@{
+    ViewData["Title"] = "Aprobación de servicio";
+}
+
+@* <h1>Details</h1> *@
+
+<div>
+    <h4>Aprobación de servicio</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Servicio)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Servicio)
+        </dd>
+
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.NumeroIdentidad)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.NumeroIdentidad)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Nombres)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Nombres)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Apellidos)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Apellidos)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.FechaNacimiento)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.FechaNacimiento)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Sexo)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Sexo)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Aprobado)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Aprobado)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Activado)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Activado)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Anulado)
+        </dt>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.FechaCreacion)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.FechaCreacion)
+        </dd>
+    </dl>
+    <form asp-action="Aprobacion">
+
+            <input type="hidden" asp-for="id" />
+            <input type="hidden" asp-for="Servicio" />
+            <input type="hidden" asp-for="IdUsuario" />
+            <input type="hidden" asp-for="NumeroIdentidad" />
+            <input type="hidden" asp-for="Nombres" />
+            <input type="hidden" asp-for="Apellidos" />
+            <input type="hidden" asp-for="FechaNacimiento" />
+            <input type="hidden" asp-for="Sexo" />
+            <input type="hidden" asp-for="Aprobado" />
+            <input type="hidden" asp-for="Activado" />
+            <input type="hidden" asp-for="Anulado" />
+            <input type="hidden" asp-for="FechaCreacion" />
+            
+
+        <div class="form-group">
+            <input type="submit" value="Aprobar" class="btn btn-primary" />
+        </div>
+    </form>
+</div>
+<div>
+    @* <a asp-action="Edit" asp-route-id="@Model.id">Edit</a> | *@
+    <a asp-action="Index">Regresar</a>
+</div>
