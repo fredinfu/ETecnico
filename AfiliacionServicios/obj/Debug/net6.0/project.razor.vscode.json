@@ -18493,6 +18493,11 @@
       "FilePath": "c:\\Users\\fredi\\Desktop\\ETecnico\\AfiliacionServicios\\Views\\SolicitudAfiliacion\\SolicitudesActivas.cshtml",
       "TargetPath": "Views\\SolicitudAfiliacion\\SolicitudesActivas.cshtml",
       "FileKind": "mvc"
+    },
+    {
+      "FilePath": "c:\\Users\\fredi\\Desktop\\ETecnico\\AfiliacionServicios\\Views\\SolicitudAfiliacion\\SolicitudesAprobadas.cshtml",
+      "TargetPath": "Views\\SolicitudAfiliacion\\SolicitudesAprobadas.cshtml",
+      "FileKind": "mvc"
     }
   ],
   "SerializationFormat": "0.3"
