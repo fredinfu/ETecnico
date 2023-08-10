@@ -1,15 +1,13 @@
 @model AfiliacionServicios.Models.SolicitudAfiliacion
 
 @{
-    ViewData["Title"] = "Delete";
+    ViewData["Title"] = "Anular";
 }
 
-<h1>Delete</h1>
-
-<h3>Are you sure you want to delete this?</h3>
+<h3>¿Estás seguro que deseas anular esta solicitud?</h3>
+<hr />
 <div>
-    <h4>SolicitudAfiliacion</h4>
-    <hr />
+   
     <dl class="row">
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.NumeroIdentidad)
@@ -54,12 +52,6 @@
             @Html.DisplayFor(model => model.Activado)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Anulado)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Anulado)
-        </dd>
-        <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.FechaCreacion)
         </dt>
         <dd class = "col-sm-10">
@@ -69,7 +61,7 @@
     
     <form asp-action="Delete">
         <input type="hidden" asp-for="id" />
-        <input type="submit" value="Delete" class="btn btn-danger" /> |
+        <input type="submit" value="Anular" class="btn btn-danger" /> |
         <a asp-action="Index">Back to List</a>
     </form>
 </div>

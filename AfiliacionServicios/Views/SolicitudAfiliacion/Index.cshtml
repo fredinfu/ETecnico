@@ -4,7 +4,7 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1>Solicitudes</h1>
 
 <p>
     <a asp-action="Create">Nueva Afiliación</a>
@@ -12,6 +12,9 @@
 <table class="table">
     <thead>
         <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Servicio)
+            </th>
             <th>
                 @Html.DisplayNameFor(model => model.NumeroIdentidad)
             </th>
@@ -35,6 +38,9 @@
 @foreach (var item in Model) {
         <tr>
             <td>
+                @Html.DisplayFor(modelItem => item.Servicio)
+            </td>
+            <td>
                 @Html.DisplayFor(modelItem => item.NumeroIdentidad)
             </td>
             <td>
@@ -51,11 +57,15 @@
                 @Html.DisplayFor(modelItem => item.FechaCreacion)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.id">Details</a> |
-                <a asp-action="Aprobacion" asp-route-id="@item.id">Aprobar</a> |
-                <a asp-action="Activacion" asp-route-id="@item.id">Activar</a> |
-                <a asp-action="Delete" asp-route-id="@item.id">Delete</a>
+                @* <a asp-action="Edit" asp-route-id="@item.id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.id">Details</a> | *@
+                @if(item.Aprobado == false) {
+                    <a asp-action="Aprobacion" asp-route-id="@item.id">Aprobar |</a> 
+                } 
+                @if(item.Aprobado == true && item.Activado == false) {
+                    <a asp-action="Activacion" asp-route-id="@item.id">Activar |</a> 
+                }
+                <a asp-action="Delete" asp-route-id="@item.id">Anular</a>
             </td>
         </tr>
 }

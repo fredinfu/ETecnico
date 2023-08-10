@@ -22,7 +22,7 @@ namespace AfiliacionServicios.Controllers
         // GET: SolicitudAfiliacion
         public async Task<IActionResult> Index()
         {
-            return View(await _context.SolicitudAfiliacion.ToListAsync());
+            return View(await _context.SolicitudAfiliacion.Where(m => m.Anulado == false).ToListAsync());
         }
 
         // GET: SolicitudAfiliacion/Details/5
@@ -46,7 +46,7 @@ namespace AfiliacionServicios.Controllers
         public async Task<IActionResult> Activacion(int? id){
             if (id == null) return NotFound();
 
-            var solicitudAfiliacion = await _context.SolicitudAfiliacion.FirstOrDefaultAsync(m => m.id == id);
+            var solicitudAfiliacion = await _context.SolicitudAfiliacion.FirstOrDefaultAsync(m => m.id == id && m.Anulado == false);
 
             if(solicitudAfiliacion == null) return NotFound();
 
@@ -85,7 +85,7 @@ namespace AfiliacionServicios.Controllers
             }
 
             var solicitudAfiliacion = await _context.SolicitudAfiliacion
-                .FirstOrDefaultAsync(m => m.id == id);
+                .FirstOrDefaultAsync(m => m.id == id && m.Anulado == false);
             if (solicitudAfiliacion == null)
             {
                 return NotFound();
@@ -142,7 +142,7 @@ namespace AfiliacionServicios.Controllers
                 
 
                 var solicitudAfiliacionNoAprobada = await _context.SolicitudAfiliacion
-                    .FirstOrDefaultAsync(m => m.NumeroIdentidad == solicitudAfiliacion.NumeroIdentidad && m.Aprobado == false);
+                    .FirstOrDefaultAsync(m => m.NumeroIdentidad == solicitudAfiliacion.NumeroIdentidad && m.Aprobado == false && m.Anulado == false);
 
                 if(solicitudAfiliacionNoAprobada != null) {
                     ViewBag.Message = $"Ya existen solicitudes sin aprobar para el afiliado, favor revisar que esten aprobada las afiliaciones del clientes antes de crear otra";
@@ -236,7 +236,10 @@ namespace AfiliacionServicios.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var solicitudAfiliacion = await _context.SolicitudAfiliacion.FindAsync(id);
-            _context.SolicitudAfiliacion.Remove(solicitudAfiliacion);
+            if(solicitudAfiliacion == null) return NotFound();
+
+            solicitudAfiliacion.Anulado = true;
+            // _context.SolicitudAfiliacion.Remove(solicitudAfiliacion);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
