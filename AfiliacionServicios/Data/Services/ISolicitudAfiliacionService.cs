@@ -22,6 +22,6 @@ namespace AfiliacionServicios.Data.Services
         void Aprobacion(SolicitudAfiliacion solicitudAfiliacion);
         Task<SolicitudAfiliacion> AfiliacionNoAprobada(SolicitudAfiliacion solicitudAfiliacion);
 
- 
+        bool Exist(int id);
     }
 }

@@ -205,8 +205,7 @@ namespace AfiliacionServicios.Controllers
                 try
                 {
                     _service.Edit(solicitudAfiliacion);
-                    // _context.Update(solicitudAfiliacion);
-                    // await _context.SaveChangesAsync();
+
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -250,9 +249,6 @@ namespace AfiliacionServicios.Controllers
             if(solicitudAfiliacion == null) return NotFound();
 
             _service.Delete(id);
-            // solicitudAfiliacion.Anulado = true;
-            // _context.SolicitudAfiliacion.Remove(solicitudAfiliacion);
-            // await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
