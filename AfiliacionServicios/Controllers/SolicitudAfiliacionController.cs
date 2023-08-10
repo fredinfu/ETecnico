@@ -40,6 +40,24 @@ namespace AfiliacionServicios.Controllers
             return View(vm);
         }
 
+        // GET: SolicitudAfiliacion/SolicitudesTodas
+        public async Task<IActionResult> SolicitudesTodas()
+        {
+            var res = await _context.SolicitudAfiliacion.ToListAsync();
+
+           
+            return View(res);
+        }
+
+        // GET: SolicitudAfiliacion/SolicitudesAprobadas
+        public async Task<IActionResult> SolicitudesAprobadas()
+        {
+            var res = await _context.SolicitudAfiliacion.Where(m => m.Anulado == false && m.Aprobado).ToListAsync();
+
+           
+            return View(res);
+        }
+
         // GET: SolicitudAfiliacion/SolicitudesActivas
         public async Task<IActionResult> SolicitudesActivas()
         {
@@ -49,14 +67,6 @@ namespace AfiliacionServicios.Controllers
             return View(res);
         }
 
-        // GET: SolicitudAfiliacion/SolicitudesActivas
-        public async Task<IActionResult> SolicitudesAprobadas()
-        {
-            var res = await _context.SolicitudAfiliacion.Where(m => m.Anulado == false && m.Aprobado).ToListAsync();
-
-           
-            return View(res);
-        }
 
         // GET: SolicitudAfiliacion/Details/5
         public async Task<IActionResult> Details(int? id)
