@@ -53,6 +53,8 @@ namespace AfiliacionServicios.Data.Services
                 .FirstOrDefaultAsync(m => m.id == id);
         }
 
+        
+
         public async void Activacion(SolicitudAfiliacion solicitudAfiliacion)
         {
             solicitudAfiliacion.Activado = true;
@@ -88,6 +90,11 @@ namespace AfiliacionServicios.Data.Services
 
             solicitudAfiliacion.Anulado = true;
             _context.SaveChanges();
+        }
+
+        public bool Exist(int id)
+        {
+            return _context.SolicitudAfiliacion.Any(e => e.id == id);
         }
     }
 }
