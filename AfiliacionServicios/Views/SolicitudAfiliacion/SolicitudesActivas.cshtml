@@ -1,0 +1,67 @@
+@model IEnumerable<AfiliacionServicios.Models.SolicitudAfiliacion>
+
+@{
+    ViewData["Title"] = "Solicitudes activas";
+}
+
+<h4>Solicitudes activas</h4>
+<p>
+    <a asp-action="Create">Nueva Afiliación</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Servicio)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.NumeroIdentidad)
+            </th>
+            <th>
+                Afiliado
+            </th>
+            
+            <th>
+                @Html.DisplayNameFor(model => model.Aprobado)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Activado)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FechaCreacion)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Servicio)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.NumeroIdentidad)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Afiliado)               
+            </td>            
+            <td>
+                @Html.DisplayFor(modelItem => item.Aprobado)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Activado)
+            </td>
+
+            <td>
+                @Html.DisplayFor(modelItem => item.FechaCreacion)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.id">Details</a> | 
+               
+                <a asp-action="Delete" asp-route-id="@item.id">Anular</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

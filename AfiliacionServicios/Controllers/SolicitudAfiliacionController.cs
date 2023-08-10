@@ -36,8 +36,28 @@ namespace AfiliacionServicios.Controllers
                     Activado = s.Activado,
                     FechaCreacion = s.FechaCreacion,
                     DaysDiff = (DateTime.Today - s.FechaCreacion).Days 
-                }).Where(m => m.Anulado == false && m.Aprobado == false && m.DaysDiff > 30).ToList();
+                }).Where(m => m.Anulado == false && m.Aprobado == false && m.DaysDiff > 0).ToList();
             return View(vm);
+        }
+
+        // GET: SolicitudAfiliacion/SolicitudesActivas
+        public async Task<IActionResult> SolicitudesActivas()
+        {
+            var res = await _context.SolicitudAfiliacion.Where(m => m.Anulado == false && m.Activado).ToListAsync();
+
+            // var vm = res
+            //     .Select(s => new SolicitudAfiliacionVm{
+            //         id = s.id,
+            //         Servicio = s.Servicio,
+            //         NumeroIdentidad = s.NumeroIdentidad,
+            //         Nombres = s.Nombres,
+            //         Apellidos = s.Apellidos,
+            //         Aprobado = s.Aprobado,
+            //         Activado = s.Activado,
+            //         FechaCreacion = s.FechaCreacion,
+            //         DaysDiff = (DateTime.Today - s.FechaCreacion).Days 
+            //     }).Where(m => m.Anulado == false && m.Aprobado == false && m.DaysDiff > 30).ToList();
+            return View(res);
         }
 
         // GET: SolicitudAfiliacion/Details/5
