@@ -8,60 +8,43 @@ using Microsoft.EntityFrameworkCore;
 using AfiliacionServicios.Data;
 using AfiliacionServicios.Models;
 using AfiliacionServicios.Models.ViewModels;
+using AfiliacionServicios.Data.Services;
 
 namespace AfiliacionServicios.Controllers
 {
     public class SolicitudAfiliacionController : Controller
     {
         private readonly DataContext _context;
+        private readonly ISolicitudAfiliacionService _service;
 
-        public SolicitudAfiliacionController(DataContext context)
+        public SolicitudAfiliacionController(ISolicitudAfiliacionService service)
         {
-            _context = context;
+            _service = service;
         }
 
         // GET: SolicitudAfiliacion
         public async Task<IActionResult> Index()
         {
-            var res = await _context.SolicitudAfiliacion.Where(m => m.Anulado == false).ToListAsync();
-
-            var vm = res
-                .Select(s => new SolicitudAfiliacionVm{
-                    id = s.id,
-                    Servicio = s.Servicio,
-                    NumeroIdentidad = s.NumeroIdentidad,
-                    Nombres = s.Nombres,
-                    Apellidos = s.Apellidos,
-                    Aprobado = s.Aprobado,
-                    Activado = s.Activado,
-                    FechaCreacion = s.FechaCreacion,
-                    DaysDiff = (DateTime.Today - s.FechaCreacion).Days 
-                }).Where(m => m.Anulado == false && m.Aprobado == false && m.DaysDiff > 0).ToList();
+            var vm = _service.GetSolicitudesSinAprobar();
             return View(vm);
         }
 
         // GET: SolicitudAfiliacion/SolicitudesTodas
         public async Task<IActionResult> SolicitudesTodas()
-        {
-            var res = await _context.SolicitudAfiliacion.ToListAsync();
-
-           
-            return View(res);
+        {      
+            return View(_service.Get());
         }
 
         // GET: SolicitudAfiliacion/SolicitudesAprobadas
         public async Task<IActionResult> SolicitudesAprobadas()
-        {
-            var res = await _context.SolicitudAfiliacion.Where(m => m.Anulado == false && m.Aprobado).ToListAsync();
-
-           
-            return View(res);
+        {           
+            return View(await _service.GetSolicitudesAprobadas());
         }
 
         // GET: SolicitudAfiliacion/SolicitudesActivas
         public async Task<IActionResult> SolicitudesActivas()
         {
-            var res = await _context.SolicitudAfiliacion.Where(m => m.Anulado == false && m.Activado).ToListAsync();
+            var res = await _service.GetSolicitudesActivas();
 
            
             return View(res);
@@ -76,8 +59,7 @@ namespace AfiliacionServicios.Controllers
                 return NotFound();
             }
 
-            var solicitudAfiliacion = await _context.SolicitudAfiliacion
-                .FirstOrDefaultAsync(m => m.id == id);
+            var solicitudAfiliacion = await _service.GetDetails(id);
             if (solicitudAfiliacion == null)
             {
                 return NotFound();
@@ -89,8 +71,7 @@ namespace AfiliacionServicios.Controllers
         public async Task<IActionResult> Activacion(int? id){
             if (id == null) return NotFound();
 
-            var solicitudAfiliacion = await _context.SolicitudAfiliacion.FirstOrDefaultAsync(m => m.id == id && m.Anulado == false);
-
+            var solicitudAfiliacion = await _service.GetDetails(id);
             if(solicitudAfiliacion == null) return NotFound();
 
             return View(solicitudAfiliacion);
@@ -102,9 +83,7 @@ namespace AfiliacionServicios.Controllers
             if(id != solicitudAfiliacion.id) return NotFound();
 
             try {
-                solicitudAfiliacion.Activado = true;
-                _context.Update(solicitudAfiliacion);
-                await _context.SaveChangesAsync();
+                _service.Activacion(solicitudAfiliacion);
             } catch (DbUpdateConcurrencyException ex) {
                 if (!SolicitudAfiliacionExists(solicitudAfiliacion.id))
                 {
@@ -127,8 +106,7 @@ namespace AfiliacionServicios.Controllers
                 return NotFound();
             }
 
-            var solicitudAfiliacion = await _context.SolicitudAfiliacion
-                .FirstOrDefaultAsync(m => m.id == id && m.Anulado == false);
+            var solicitudAfiliacion = await _service.GetDetails(id);
             if (solicitudAfiliacion == null)
             {
                 return NotFound();
@@ -149,9 +127,7 @@ namespace AfiliacionServicios.Controllers
 
                 try
                 {
-                    solicitudAfiliacion.Aprobado = true;
-                    _context.Update(solicitudAfiliacion);
-                    await _context.SaveChangesAsync();
+                    _service.Aprobacion(solicitudAfiliacion);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -166,8 +142,6 @@ namespace AfiliacionServicios.Controllers
                 }
                 return RedirectToAction(nameof(Index));
 
-            //return View(solicitudAfiliacion);
-            
         }
 
         // GET: SolicitudAfiliacion/Create
@@ -184,17 +158,13 @@ namespace AfiliacionServicios.Controllers
             try {
                 
 
-                var solicitudAfiliacionNoAprobada = await _context.SolicitudAfiliacion
-                    .FirstOrDefaultAsync(m => m.NumeroIdentidad == solicitudAfiliacion.NumeroIdentidad && m.Aprobado == false && m.Anulado == false);
-
+                var solicitudAfiliacionNoAprobada = await _service.AfiliacionNoAprobada(solicitudAfiliacion);
                 if(solicitudAfiliacionNoAprobada != null) {
                     ViewBag.Message = $"Ya existen solicitudes sin aprobar para el afiliado, favor revisar que esten aprobada las afiliaciones del clientes antes de crear otra";
                     return View();
                 }                
 
-                // solicitudAfiliacion.FechaCreacion = DateTime.Now;
-                _context.Add(solicitudAfiliacion);
-                await _context.SaveChangesAsync();
+                _service.Create(solicitudAfiliacion);
                 return RedirectToAction(nameof(Index));
 
                 
@@ -212,7 +182,7 @@ namespace AfiliacionServicios.Controllers
                 return NotFound();
             }
 
-            var solicitudAfiliacion = await _context.SolicitudAfiliacion.FindAsync(id);
+            var solicitudAfiliacion = await _service.GetDetails(id);
             if (solicitudAfiliacion == null)
             {
                 return NotFound();
@@ -234,8 +204,9 @@ namespace AfiliacionServicios.Controllers
 
                 try
                 {
-                    _context.Update(solicitudAfiliacion);
-                    await _context.SaveChangesAsync();
+                    _service.Edit(solicitudAfiliacion);
+                    // _context.Update(solicitudAfiliacion);
+                    // await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -261,8 +232,7 @@ namespace AfiliacionServicios.Controllers
                 return NotFound();
             }
 
-            var solicitudAfiliacion = await _context.SolicitudAfiliacion
-                .FirstOrDefaultAsync(m => m.id == id);
+            var solicitudAfiliacion = await _service.GetDetails(id);
             if (solicitudAfiliacion == null)
             {
                 return NotFound();
@@ -276,12 +246,13 @@ namespace AfiliacionServicios.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var solicitudAfiliacion = await _context.SolicitudAfiliacion.FindAsync(id);
+            var solicitudAfiliacion = await _service.GetDetails(id);
             if(solicitudAfiliacion == null) return NotFound();
 
-            solicitudAfiliacion.Anulado = true;
+            _service.Delete(id);
+            // solicitudAfiliacion.Anulado = true;
             // _context.SolicitudAfiliacion.Remove(solicitudAfiliacion);
-            await _context.SaveChangesAsync();
+            // await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 

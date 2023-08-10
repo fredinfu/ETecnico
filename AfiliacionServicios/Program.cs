@@ -1,4 +1,5 @@
 using AfiliacionServicios.Data;
+using AfiliacionServicios.Data.Services;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -8,6 +9,7 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<DataContext>(options => {
     options.UseSqlite(connectionString);
 });
+builder.Services.AddScoped<ISolicitudAfiliacionService, SolicitudAfiliacionService>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

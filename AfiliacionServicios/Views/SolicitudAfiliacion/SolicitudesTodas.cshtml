@@ -63,6 +63,9 @@
             <td>
                 <a asp-action="Edit" asp-route-id="@item.id">Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.id">Details</a> | 
+                @if(item.Aprobado == false) {
+                    <a asp-action="Aprobacion" asp-route-id="@item.id">Aprobar |</a> 
+                }
                 @if( item.Activado == false) {
                     <a asp-action="Activacion" asp-route-id="@item.id">Activar |</a> 
                 }
