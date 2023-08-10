@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using AfiliacionServicios.Data;
 using AfiliacionServicios.Models;
+using AfiliacionServicios.Models.ViewModels;
 
 namespace AfiliacionServicios.Controllers
 {
@@ -22,7 +23,21 @@ namespace AfiliacionServicios.Controllers
         // GET: SolicitudAfiliacion
         public async Task<IActionResult> Index()
         {
-            return View(await _context.SolicitudAfiliacion.Where(m => m.Anulado == false).ToListAsync());
+            var res = await _context.SolicitudAfiliacion.Where(m => m.Anulado == false).ToListAsync();
+
+            var vm = res
+                .Select(s => new SolicitudAfiliacionVm{
+                    id = s.id,
+                    Servicio = s.Servicio,
+                    NumeroIdentidad = s.NumeroIdentidad,
+                    Nombres = s.Nombres,
+                    Apellidos = s.Apellidos,
+                    Aprobado = s.Aprobado,
+                    Activado = s.Activado,
+                    FechaCreacion = s.FechaCreacion,
+                    DaysDiff = (DateTime.Today - s.FechaCreacion).Days 
+                }).Where(m => m.Anulado == false && m.Aprobado == false && m.DaysDiff > 30).ToList();
+            return View(vm);
         }
 
         // GET: SolicitudAfiliacion/Details/5
@@ -149,7 +164,7 @@ namespace AfiliacionServicios.Controllers
                     return View();
                 }                
 
-                solicitudAfiliacion.FechaCreacion = DateTime.Now;
+                // solicitudAfiliacion.FechaCreacion = DateTime.Now;
                 _context.Add(solicitudAfiliacion);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -182,15 +197,13 @@ namespace AfiliacionServicios.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("id,NumeroIdentidad,Nombres,Apellidos,FechaNacimiento,Sexo,Aprobado,Activado,Anulado,FechaCreacion")] SolicitudAfiliacion solicitudAfiliacion)
+        public async Task<IActionResult> Edit(int id, [Bind("id,NumeroIdentidad,Nombres,Apellidos,FechaNacimiento,Sexo,Aprobado,Activado,Anulado,FechaCreacion,Servicio")] SolicitudAfiliacion solicitudAfiliacion)
         {
             if (id != solicitudAfiliacion.id)
             {
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
-            {
                 try
                 {
                     _context.Update(solicitudAfiliacion);
@@ -208,8 +221,8 @@ namespace AfiliacionServicios.Controllers
                     }
                 }
                 return RedirectToAction(nameof(Index));
-            }
-            return View(solicitudAfiliacion);
+
+            //return View(solicitudAfiliacion);
         }
 
         // GET: SolicitudAfiliacion/Delete/5

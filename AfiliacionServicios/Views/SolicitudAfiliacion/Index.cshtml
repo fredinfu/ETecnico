@@ -1,11 +1,10 @@
-@model IEnumerable<AfiliacionServicios.Models.SolicitudAfiliacion>
+@model IEnumerable<AfiliacionServicios.Models.ViewModels.SolicitudAfiliacionVm>
 
 @{
     ViewData["Title"] = "Index";
 }
 
-<h1>Solicitudes</h1>
-
+<h4>Solicitudes sin ser aprobadas</h4>
 <p>
     <a asp-action="Create">Nueva Afiliación</a>
 </p>
@@ -57,8 +56,8 @@
                 @Html.DisplayFor(modelItem => item.FechaCreacion)
             </td>
             <td>
-                @* <a asp-action="Edit" asp-route-id="@item.id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.id">Details</a> | *@
+                <a asp-action="Edit" asp-route-id="@item.id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.id">Details</a> | 
                 @if(item.Aprobado == false) {
                     <a asp-action="Aprobacion" asp-route-id="@item.id">Aprobar |</a> 
                 } 
